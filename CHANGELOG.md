@@ -1,5 +1,11 @@
 # Changelog - PSOFT Pencil+ 4 Line
 
+## [4.1.1] - 2021-06-09
+
+### 修正点
+- Material Line Functions Node の色設定がリニアカラースペースの場合に正しく反映されない不具合を修正
+
+
 ## [4.1.0] - 2021-02-16
 
 ### Package Manager としての初回リリース
@@ -11,6 +17,7 @@
 - Line Node のインスペクタ表示で、選択したラインセットの Brush Settings Node が存在しない場合にエラーが発生する不具合を修正
 - Line Set Node の [Reduction Settings] をオンにするたびに Reduction Settings Node が新規生成される不具合を修正
 - Texture Map Node の [Texture UV] を [Screen] に設定したとき、テクスチャの垂直方向が反転してしまう不具合を修正
+
 
 ## [4.0.4] - 2019-10-03
 
