@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Pencil_4;
 using UnityEditor;
@@ -6,6 +7,8 @@ using UnityEngine;
 
 namespace Pcl4Editor
 {
+    using Output = RenderElementsLineNode.Output;
+
     [CustomEditor(typeof(RenderElementsLineNode))]
     public class RenderElementsLineNodeEditor : Editor
     {
@@ -30,7 +33,11 @@ namespace Pcl4Editor
         private SerializedProperty _propIsDrawLineSetId6;
         private SerializedProperty _propIsDrawLineSetId7;
         private SerializedProperty _propIsDrawLineSetId8;
+        private SerializedProperty _propOutputType;
+        private SerializedProperty _propZDepthMin;
+        private SerializedProperty _propZDepthMax;
 
+        private bool _isOutputElementFoldoutOpen = true;
         private bool _isTextureOutputFoldoutOpen = true;
         private bool _isOutputCategoryFoldoutOpen = true;
         private bool _isBackgroundColorFoldoutOpen = true;
@@ -41,6 +48,7 @@ namespace Pcl4Editor
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
+            CreateOutputElementGui();
             CreateTextureOutputGui();
             CreateOutputCategoryGui();
             CreateBackgroundColorGui();
@@ -73,6 +81,38 @@ namespace Pcl4Editor
             _propIsDrawLineSetId6 = serializedObject.FindProperty("IsDrawLineSetId6");
             _propIsDrawLineSetId7 = serializedObject.FindProperty("IsDrawLineSetId7");
             _propIsDrawLineSetId8 = serializedObject.FindProperty("IsDrawLineSetId8");
+            _propOutputType = serializedObject.FindProperty("OutputType");
+            _propZDepthMin = serializedObject.FindProperty("ZDepthMin");
+            _propZDepthMax = serializedObject.FindProperty("ZDepthMax");
+        }
+
+        private void CreateOutputElementGui()
+        {
+            //"Output Element"
+            _isOutputElementFoldoutOpen = EditorGUILayout.Foldout(_isOutputElementFoldoutOpen, "Output Element");
+
+            ++EditorGUI.indentLevel;
+            if (_isOutputElementFoldoutOpen)
+            {
+                var outputType = (Output)Enum
+                           .GetValues(typeof(Output))
+                           .GetValue(_propOutputType.enumValueIndex);
+
+                _propOutputType.enumValueIndex =
+                    (int)(Output)EditorGUILayout.EnumPopup("Type", outputType);
+
+                using (new EditorGUI.DisabledGroupScope((Output)_propOutputType.enumValueIndex != Output.ZDepth))
+                {
+                    _propZDepthMin.floatValue =
+                        EditorGUILayout.Slider("ZMin", _propZDepthMin.floatValue, 0.0f, 1000.0f);
+
+                    _propZDepthMax.floatValue =
+                        EditorGUILayout.Slider("ZMax", _propZDepthMax.floatValue, 0.0f, 1000.0f);
+                }
+
+            }
+            --EditorGUI.indentLevel;
+            EditorGUILayout.Space();
         }
 
 

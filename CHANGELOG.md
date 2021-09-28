@@ -1,5 +1,12 @@
 # Changelog - PSOFT Pencil+ 4 Line
 
+## [4.1.2] - 2021-09-30
+
+### 機能追加
+- Render Element にラインのZ深度を出力する機能を追加
+- Line Node / Line Set Node / Brush Settings Node / Brush Detail Node のインスペクタにブラシプレビューとストロークプレビュー表示を追加
+
+
 ## [4.1.1] - 2021-06-09
 
 ### 修正点

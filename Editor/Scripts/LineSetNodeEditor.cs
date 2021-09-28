@@ -14,7 +14,7 @@ namespace Pcl4Editor
     using LineType = LineSetNode.LineType;
 
     [CustomEditor(typeof(LineSetNode))]
-    public class LineSetNodeEditor : Editor
+    public class LineSetNodeEditor : PreviewEditor
     {
         public bool foldoutBrush = true;
         public bool foldoutEdge = true;
@@ -903,8 +903,10 @@ namespace Pcl4Editor
             hiddenParams.propAngle = serializedBrushDetailHiddenParams.FindProperty("Angle");
         }
 
-        private void OnEnable()
+        override protected void OnEnable()
         {
+            base.OnEnable();
+
             propId = serializedObject.FindProperty("Id");
 
             // ---------- Objects List ----------
@@ -1130,6 +1132,17 @@ namespace Pcl4Editor
             vBrushSettingsNodeComponent.BrushDetail = newVBrushDetail;
             hBrushSettingsNodeComponent.BrushDetail = newHBrushDetail;
 
+        }
+
+        internal override BrushDetailNode previewNode { get { return optionalSettingsNode?.BrushDetail ? optionalSettingsNode?.BrushDetail?.GetComponent<BrushDetailNode>() : null; } }
+
+        internal override BrushSettingsNode optionalSettingsNode
+        {
+            get
+            { 
+                var bsObj = currentParams.propBrushSettings?.objectReferenceValue;
+                return bsObj ? (bsObj as GameObject).GetComponent<BrushSettingsNode>() : null;
+            }
         }
     }
 

@@ -13,7 +13,7 @@ namespace Pcl4Editor
     using Common = EditorCommons;
 
     [CustomEditor(typeof(LineNode))]
-    public class LineNodeEditor : Editor
+    public class LineNodeEditor : PreviewEditor
     {
 
         // foldout
@@ -1368,15 +1368,19 @@ namespace Pcl4Editor
             hiddenParams.propAngle = serializedBrushDetailHiddenParams.FindProperty("Angle");
         }
 
-        private void OnDisable()
+        override protected void OnDisable()
         {
             var lineNode = target as LineNode;
             if (lineNode != null) lineNode.SelectedLineSet = _selectedLineSet;
+
+            base.OnDisable();
         }
 
 
-        private void OnEnable()
+        override protected void OnEnable()
         {
+            base.OnEnable();
+
             var lineNode = target as LineNode;
 
             if (lineNode != null)
@@ -1564,6 +1568,16 @@ namespace Pcl4Editor
             EditorCommons.CreateNodeObjectFromMenu<LineNode>(menuCommand, typeof(LineListNode), "LineList");
         }
 
+        internal override BrushDetailNode previewNode { get { return optionalSettingsNode?.BrushDetail ? optionalSettingsNode?.BrushDetail?.GetComponent<BrushDetailNode>() : null; } }
+
+        internal override BrushSettingsNode optionalSettingsNode
+        {
+            get
+            { 
+                var bsObj = currentParams.propBrushSettings?.objectReferenceValue;
+                return bsObj ? (bsObj as GameObject).GetComponent<BrushSettingsNode>() : null;
+            }
+        }
     }
 }
 

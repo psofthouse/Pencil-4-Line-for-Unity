@@ -10,7 +10,7 @@ namespace Pcl4Editor
     using Common = EditorCommons;
 
     [CustomEditor(typeof(BrushSettingsNode))]
-    public class BrushSettingsNodeEditor : Editor
+    public class BrushSettingsNodeEditor : PreviewEditor
     {
         /// <summary>
         /// Foldout
@@ -188,8 +188,10 @@ namespace Pcl4Editor
 
 
 
-        void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
+            
             propBrushDetail     = serializedObject.FindProperty("BrushDetail");
             //propBlendMode       = serializedObject.FindProperty("BlendMode");
             propBlendAmount     = serializedObject.FindProperty("BlendAmount");
@@ -240,5 +242,9 @@ namespace Pcl4Editor
 
             brushSettingsNode.BrushDetail = newBrushDetailObject;
         }
+
+        internal override BrushDetailNode previewNode { get { return optionalSettingsNode?.BrushDetail ? optionalSettingsNode?.BrushDetail?.GetComponent<BrushDetailNode>() : null; } }
+
+        internal override BrushSettingsNode optionalSettingsNode { get { return target as BrushSettingsNode; } }
     }
 }

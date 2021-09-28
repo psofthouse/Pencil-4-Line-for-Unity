@@ -16,7 +16,7 @@ namespace Pcl4Editor
     using Common = EditorCommons;
 
     [CustomEditor(typeof(BrushDetailNode))]
-    public class BrushDetailNodeEditor : Editor
+    public class BrushDetailNodeEditor : PreviewEditor
     {
         private SerializedProperty propBrushType;
         private SerializedProperty propBrushMap;
@@ -614,8 +614,10 @@ namespace Pcl4Editor
 
         }
 
-        void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
+
             propBrushType = serializedObject.FindProperty("BrushType");
             propBrushMap = serializedObject.FindProperty("BrushMap");
             propMapOpacity = serializedObject.FindProperty("MapOpacity");
@@ -707,6 +709,10 @@ namespace Pcl4Editor
         {
             EditorCommons.CreateNodeObjectFromMenu<BrushDetailNode>(menuCommand);
         }
+
+        internal override BrushDetailNode previewNode { get { return target as BrushDetailNode; } }
+
+        internal override BrushSettingsNode optionalSettingsNode { get { return previewNode?.transform?.parent?.GetComponent<BrushSettingsNode>(); } }
     }
 }
 
