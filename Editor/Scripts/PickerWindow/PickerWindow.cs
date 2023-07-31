@@ -153,10 +153,20 @@ namespace Pcl4Editor
             GUI.Box(new Rect(0, 0, position.width, position.height), "");
 
             // 検索用テキストボックス
-            treeView.searchString = EditorGUI.TextField(searchTextFieldRect, treeView.searchString, GUI.skin.FindStyle("ToolbarSeachTextField"));
+            var style = GUI.skin.FindStyle("ToolbarSeachTextField");
+            if (style == null)
+            {
+                style = GUI.skin.FindStyle("ToolbarSearchTextField");
+            }
+            treeView.searchString = EditorGUI.TextField(searchTextFieldRect, treeView.searchString, style);
 
             // 検索用テキストボックスの右の"×"ボタン
-            if (GUI.Button(searchCancelButtonRect, "", GUI.skin.FindStyle("ToolbarSeachCancelButton")))
+            style = GUI.skin.FindStyle("ToolbarSeachCancelButton");
+            if (style == null)
+            {
+                style = GUI.skin.FindStyle("ToolbarSearchCancelButton");
+            }
+            if (GUI.Button(searchCancelButtonRect, "", style))
             {
                 treeView.searchString = "";
                 GUI.FocusControl(null);

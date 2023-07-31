@@ -33,22 +33,41 @@ namespace Pencil_4
 
         public void ChangeTextureSize(Func<Camera, Size> textureSize)
         {
-            pencilRenderer.TextureSize = textureSize;
+            this.TextureSizeFunc = textureSize;
         }
 
-        private void InitialSetup()
+        public Func<Camera, Size> TextureSizeFunc
         {
-            var camera = GetComponent<Camera>();
-            if (camera != null)
+            get => _TextureSizeFunc;
+            set
             {
-                if (this.pencilRenderer == null)
+                _TextureSizeFunc = value;
+                if (pencilRenderer != null)
                 {
-                    this.pencilRenderer = new PencilLineRenderer(camera, (targetCam) =>
-                    {
-                        return new Size { Width = camera.pixelWidth, Height = camera.pixelHeight };
-                    });
+                    pencilRenderer.TextureSize = _TextureSizeFunc != null ? _TextureSizeFunc : _DefaultTextureSizeFunc;
                 }
+            }
+        }
+        private Func<Camera, Size> _TextureSizeFunc;
+        static protected Func<Camera, Size> _DefaultTextureSizeFunc =
+            (camera) => new Size { Width = camera.pixelWidth, Height = camera.pixelHeight };
 
+        public Action<PencilLineEffect> PreRenderPreprocessCallback { get; set; }
+        public Action<PencilLineEffect> PostRenderPreprocessCallback { get; set; }
+
+        [System.NonSerialized]
+        public float LineScale = 1.0f;
+
+        virtual protected void InitialSetup()
+        {
+            if (this.pencilRenderer == null)
+            {
+                this.pencilRenderer = new PencilLineRenderer(GetComponent<Camera>(),
+                    _TextureSizeFunc != null ? _TextureSizeFunc : _DefaultTextureSizeFunc);
+            }
+
+            if (!lineDispMaterial)
+            {
                 Shader lineDispShader = Shader.Find("Hidden/Pcl4LineCameraEffect");
                 lineDispMaterial = new Material(lineDispShader);
             }
@@ -160,7 +179,17 @@ namespace Pencil_4
                     }
                     
                     //
-                    pencilRenderer.RenderPreprocessAsync(lineListNode, timeout, Mode);
+                    if (PreRenderPreprocessCallback != null)
+                    {
+                        PreRenderPreprocessCallback(this);
+                    }
+
+                    pencilRenderer.RenderPreprocessAsync(lineListNode, timeout, Mode, LineScale);
+
+                    if (PostRenderPreprocessCallback != null)
+                    {
+                        PostRenderPreprocessCallback(this);
+                    }
                 }
             }
 
@@ -220,6 +249,8 @@ namespace Pencil_4
 
         void OnDisable()
         {
+            this.isRendering = false;
+
             if (pencilRenderer != null)
             {
                 pencilRenderer.Dispose();
