@@ -519,11 +519,13 @@ namespace Pcl4Editor
                         if (GUILayout.Button("Import"))
                         {
                             _importMethodInfo.Invoke(null, new object[] { target });
+                            GUIUtility.ExitGUI();
                         }
 
                         if (GUILayout.Button("Export"))
                         {
                             _exportMethodInfo.Invoke(null, new object[] { target });
+                            GUIUtility.ExitGUI();
                         }
                     }
                 }

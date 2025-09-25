@@ -36,7 +36,11 @@ namespace Pcl4Editor
 
         public override GUIContent GetPreviewTitle()
         {
+#if UNITY_2023_1_OR_NEWER
+            return GUIContent.none;
+#else
             return null;
+#endif
         }
 
         public override void OnPreviewSettings()

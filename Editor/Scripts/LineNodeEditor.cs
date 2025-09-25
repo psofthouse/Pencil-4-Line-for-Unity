@@ -262,6 +262,10 @@ namespace Pcl4Editor
             serializedLineSetParams.Update();
 
             // Objects
+            if (objectPickerID == -1)
+            {
+                objectPickerID = GUIUtility.GetControlID(FocusType.Passive);
+            }
             CreateDragDropList<GameObject>(propObjects,
                                  _reorderableObjects,
                                  objectPickerID,
@@ -269,6 +273,10 @@ namespace Pcl4Editor
 
 
             // Materials
+            if (materialPickerID == -1)
+            {
+                materialPickerID = GUIUtility.GetControlID(FocusType.Passive);
+            }
             CreateDragDropList<Material>(propMaterials,
                                _reorderableMaterials,
                                materialPickerID,
@@ -1525,10 +1533,6 @@ namespace Pcl4Editor
             {
                 reorderableSetList.index = 0;
             }
-
-            // ObjectとMaterialで使用するControlIDを取得
-            objectPickerID = GUIUtility.GetControlID(FocusType.Passive);
-            materialPickerID = GUIUtility.GetControlID(FocusType.Passive);
 
             LineSetSelectionChanged();
         }

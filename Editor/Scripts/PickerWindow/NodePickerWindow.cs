@@ -6,6 +6,10 @@ using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using Pencil_4;
 
+#if UNITY_6000_2_OR_NEWER
+using TreeViewState = UnityEditor.IMGUI.Controls.TreeViewState<int>;
+#endif
+
 namespace Pcl4Editor
 {
     // MEMO: ScriptableObject.CreateInstanceの型引数にはジェネリックな型を渡せないため、
@@ -16,7 +20,7 @@ namespace Pcl4Editor
 
         public static void Open(Type nodeType, Action<GameObject> onAddButtonPushed)
         {
-            if(!nodeType.IsSubclassOf(typeof(NodeBase)))
+            if (!nodeType.IsSubclassOf(typeof(NodeBase)))
             {
                 throw new ArgumentException(nodeType.ToString() + " is not a subclass of NodeBase.");
             }

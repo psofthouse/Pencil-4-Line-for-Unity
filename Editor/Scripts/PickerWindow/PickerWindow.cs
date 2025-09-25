@@ -5,6 +5,12 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 
+#if UNITY_6000_2_OR_NEWER
+using TreeView = UnityEditor.IMGUI.Controls.TreeView<int>;
+using TreeViewItem = UnityEditor.IMGUI.Controls.TreeViewItem<int>;
+using TreeViewState = UnityEditor.IMGUI.Controls.TreeViewState<int>;
+#endif
+
 namespace Pcl4Editor
 {
     public class PickerWindow<T> : EditorWindow
@@ -58,7 +64,7 @@ namespace Pcl4Editor
                         displayName: (x.Value != null) ? x.Value.name : "None"))
                     .ToList();
 
-                foreach(var element in root.children)
+                foreach (var element in root.children)
                 {
                     element.icon = elementIcon;
                 }

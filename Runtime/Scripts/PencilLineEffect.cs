@@ -159,7 +159,11 @@ namespace Pencil_4
                     // 正しい頂点情報を得られないことがあるので、アニメーションを強制的に更新する
                     if (timeout < 0 && Mode == EffectMode.PostProcessing)
                     {
+#if UNITY_2023_1_OR_NEWER
+                        foreach (var animator in Component.FindObjectsByType<Animator>(FindObjectsSortMode.None))
+#else
                         foreach (var animator in Component.FindObjectsOfType<Animator>())
+#endif
                         {
                             if (animator.isActiveAndEnabled && animator.cullingMode != AnimatorCullingMode.AlwaysAnimate)
                             {
@@ -169,7 +173,11 @@ namespace Pencil_4
                                 animator.cullingMode = cullingMode;
                             }
                         }
+#if UNITY_2023_1_OR_NEWER
+                        foreach (var animation in Component.FindObjectsByType<Animation>(FindObjectsSortMode.None))
+#else
                         foreach (var animation in Component.FindObjectsOfType<Animation>())
+#endif
                         {
                             if (animation.isActiveAndEnabled && animation.cullingType != AnimationCullingType.AlwaysAnimate)
                             {
